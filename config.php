@@ -7,7 +7,7 @@ function createTable($sqlStmt, $tableName)
     global $conn;
     $stmt = $conn->prepare($sqlStmt);
     if ($stmt->execute()) {
-        echo "<p style='color: green'>".$tableName. ": Table Created Successfully</p>";
+        //echo "<p style='color: green'>".$tableName. ": Table Created Successfully</p>";
     } else {
         echo "<p style='color: red'>".$tableName. ": Table Created Failure</p>";
     }
@@ -24,7 +24,7 @@ function addUser($username, $unhashedPassword, $name,$profilePic ,$accessLevel) 
    $sqlstmt->bindValue(':accessLevel',$accessLevel);
     if ($sqlstmt->execute()) {
 
-        echo "<p style='color: green'>User:".$username.":User Created Succesfully</p>";
+       // echo "<p style='color: green'>User:".$username.":User Created Succesfully</p>";
     }else{  echo "<p style='color: red'>User:".$username.":User Created Failure</p>";
 
     }
@@ -40,11 +40,37 @@ $query = file_get_contents("sql/create-products.sql");
 createTable($query,"Products");
 
 $query= $conn->query("SELECT COUNT(*) as count FROM user");
+$rowCount = $query->fetchArray();
+$userCount = $rowCount["count"];
 
+if ($userCount == 0) {
+    addUser("admin", "admin", "Administrator", "admin.jpg", "Administrator");
+    addUser("user", "user", "User", "user.jpg", "User");
+    addUser("alek", "alek", "Alek", "alek.jpg", "User");
+}
+function add_product($productName, $productCategory, $productQuantity, $productPrice, $productImage, $productCode) {
+    global$conn;
+    $sqlstmt = $conn->prepare("INSERT INTO products (productName, category, quantity, price, image, code) VALUES (:name, :category, :quantity, :price, :image, :code)");
+    $sqlstmt->bindValue(':name', $productName);
+    $sqlstmt->bindValue(':category', $productCategory);
+    $sqlstmt->bindValue(':quantity', $productQuantity);
+    $sqlstmt->bindValue(':price', $productPrice);
+    $sqlstmt->bindValue(':image', $productImage);
+    $sqlstmt->bindValue(':code', $productCode);
 
+    if($sqlstmt->execute()) {
+    //    echo"<p style='color: green'>Product:".$productName.": Created Successfully</p>";
+    }else{
+        echo"<p style='color: red'>Product:".$productName.": Created Failure</p>";
+    }
+}
+$query= $conn->query("SELECT COUNT(*) as count FROM products");
+$rowCount = $query->fetchArray();
+$productCount = $rowCount["count"];
 
-addUser("admin","admin","Administrator","admin.jpg","Administrator");
-addUser("user","user","User","user.jpg","User");
-addUser("alek","alek","Alek","alek.jpg","User");
+if($productCount == 0) {
+    add_product('False Sarsaparilla','Plants - Medicinal', 29, 26.11,'4389883142_5142ceb6a7_b.jpg','a4d84470');
+
+}
 
 ?>
