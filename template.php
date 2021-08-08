@@ -14,6 +14,12 @@
     </head>
 <body>
 <!-- Navigation Bar -->
+<li class="nav-item">
+    <a class="nav-link" href="profile.php">User Profile</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="logout.php">Logout</a>
+</li>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.php">
@@ -34,6 +40,20 @@
         </div>
     </div>
 </nav>
+<?php
+function sanitise_data($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
 
+function outputFooter()
+{
+    date_default_timezone_set('Australia/Canberra');
+    echo "<footer>This page was last modified: " . date("F d Y H:i:s.", filemtime("index.php")) . "</footer>";
+}
+?>
 <script src="js/bootstrap.bundle.js"></script>
 
